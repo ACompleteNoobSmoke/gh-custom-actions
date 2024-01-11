@@ -1,0 +1,30 @@
+name: "Custom Composite Action"
+description: "Me testing a Custom composite Action"
+author: "ACompleteNoobSmoke"
+
+inputs:
+  favorite_game:
+    description: "User's Favorite Game"
+    required: true
+  name:
+    description: "User's Name"
+    required: true
+outputs:
+  name:
+    description: "Name Entered"
+    value: ${{ steps.info.outputs.name }}
+  favorite_game:
+    description: "Video Game Entered"
+    value: ${{ steps.info.outputs.favorite_game }}
+    
+
+runs:
+  using: composite
+  steps:
+    - name: Run Stuff & Get outputs
+      id: info
+      shell: bash
+      run: |
+        echo "name=Hello, My Name Is ${{ inputs.name }}" >> "$GITHUB_OUTPUT"
+        echo "favorite_game=My Favorite Game Is ${{ inputs.favorite_game }}" >> "$GITHUB_OUTPUT"
+

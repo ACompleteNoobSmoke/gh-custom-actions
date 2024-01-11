@@ -1,0 +1,34 @@
+name: Random Joke
+author: ACompleteNoobSmoke
+description: "Generate a random joke and send it to slack"
+
+inputs:
+  slack_username:
+    description: "Slack Username"
+  upload_joke:
+    description: "Upload Joke as an Artifact?"
+  slack_webhook:
+    description: "Slack Webhook"
+  
+runs:
+  using: composite
+  steps:
+    - name: Generate Joke
+      shell: bash
+      id: joke
+      run: |
+        EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+        echo "random_joke<<$EOF" >> "$GITHUB_OUTPUT"
+        curl -s https://icanhazdadjoke.com/ >> "$GITHUB_OUTPUT"
+        echo "" >> "$GITHUB_OUTPUT"
+        echo "$EOF" >> "$GITHUB_OUTPUT"
+    - name: Generate Joke File
+      shell: bash
+      run: echo '${{ steps.joke.outputs.random_joke }}' > joke.txt
+      if: inputs.upload_joke
+    - name: Upload The Joke
+      uses: actions/upload-aftifact@v3
+      if: inputs.upload_joke
+      with:
+        name: joke
+        path: joke.txt

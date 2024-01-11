@@ -1,0 +1,40 @@
+name: Composite Action WF
+
+run-name: Composite Action WF
+
+on:
+    workflow_dispatch:
+        inputs:
+            name:
+                description: "Please Enter Name"
+                type: string
+                required: true
+                default: "BASED"
+            favorite_game:
+                description: "Please Enter Favorite Game"
+                type: choice
+                required: true
+                options:
+                    - Playstation 5
+                    - Xbox Series X
+                    - Nintendo Switch
+                    - PC Master Race
+                    - Playstation 2
+
+jobs:
+    run-composite-action:
+        name: Run Composite Action
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v4
+            - name: Custom Action
+              id: composite_result
+              uses: ./.github/actions/custom-act/
+              with:
+                name: ${{inputs.name}}
+                favorite_game: ${{inputs.favorite_game}}
+            - name: Print Result
+              run: |
+               echo ${{ steps.composite_result.outputs.name }}
+               echo ${{ steps.composite_result.outputs.favorite_game }}

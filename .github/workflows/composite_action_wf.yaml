@@ -38,3 +38,4 @@ jobs:
               run: |
                echo ${{ steps.composite_result.outputs.name }}
                echo ${{ steps.composite_result.outputs.favorite_game }}
+               echo ${{ steps.composite_result.outputs}}
